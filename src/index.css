@@ -1,0 +1,501 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --amber: #d97706;
+  --amber-light: #fbbf24;
+  --amber-dark: #92400e;
+  --bg: #0f0a00;
+  --bg2: #1a1000;
+  --bg3: #261800;
+  --card: #1f1400;
+  --border: #3d2800;
+  --text: #f5e6c8;
+  --text-muted: #a07840;
+  --gold: #f59e0b;
+  --green: #16a34a;
+  --red: #dc2626;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+a { color: var(--amber-light); text-decoration: none; }
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  outline: none;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--amber);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Layout */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+
+.header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--amber-light);
+  letter-spacing: -0.5px;
+}
+
+.header-logo span { color: var(--text-muted); font-weight: 400; font-size: 14px; margin-left: 8px; }
+
+.header-nav { display: flex; gap: 8px; align-items: center; }
+
+.nav-btn {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav-btn:hover, .nav-btn.active {
+  background: var(--bg3);
+  color: var(--amber-light);
+  border-color: var(--border);
+}
+
+.main { flex: 1; padding: 24px; max-width: 960px; margin: 0 auto; width: 100%; }
+
+/* Auth */
+.auth-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.auth-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-card h2 { font-size: 24px; margin-bottom: 8px; color: var(--amber-light); }
+.auth-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.auth-tab {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-family: inherit;
+}
+.auth-tab.active {
+  background: var(--amber);
+  color: #000;
+  border-color: var(--amber);
+}
+
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--amber);
+  color: #000;
+}
+.btn-primary:hover { background: var(--amber-light); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary {
+  background: var(--bg3);
+  color: var(--text);
+  border-color: var(--border);
+}
+.btn-secondary:hover { border-color: var(--amber); color: var(--amber-light); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+}
+.btn-ghost:hover { color: var(--amber-light); }
+
+.btn-danger {
+  background: transparent;
+  color: var(--red);
+  border-color: var(--red);
+}
+.btn-danger:hover { background: var(--red); color: #fff; }
+
+.btn-full { width: 100%; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* Search bar */
+.search-bar {
+  position: relative;
+  margin-bottom: 20px;
+}
+.search-bar input { padding-left: 40px; font-size: 15px; }
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text-muted);
+  font-size: 13px;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  background: var(--amber-dark);
+  color: var(--amber-light);
+  border-color: var(--amber-dark);
+}
+
+/* Beer grid */
+.beer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.beer-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.beer-card:hover {
+  border-color: var(--amber);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(217, 119, 6, 0.15);
+}
+
+.beer-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+
+.beer-name { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.beer-brewery { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.beer-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--amber-dark);
+  color: var(--amber-light);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.beer-badge.user-submitted {
+  background: #1e3a2f;
+  color: #4ade80;
+}
+
+.beer-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.beer-meta span { display: flex; align-items: center; gap: 4px; }
+
+.beer-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+/* Stars */
+.stars { display: flex; gap: 2px; }
+.star {
+  font-size: 18px;
+  cursor: default;
+  color: var(--border);
+  transition: color 0.1s, transform 0.1s;
+  line-height: 1;
+}
+.star.filled { color: var(--gold); }
+.star.interactive { cursor: pointer; }
+.star.interactive:hover { transform: scale(1.2); }
+.star.sm { font-size: 14px; }
+.star.lg { font-size: 26px; }
+
+.avg-rating { font-size: 13px; color: var(--text-muted); }
+
+.your-rating-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #1a2e1a;
+  color: #4ade80;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+}
+
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.modal-title { font-size: 20px; font-weight: 700; color: var(--amber-light); }
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 22px;
+  line-height: 1;
+  padding: 2px;
+  cursor: pointer;
+}
+.modal-close:hover { color: var(--text); }
+
+.modal-beer-info { margin-bottom: 20px; }
+.modal-brewery { color: var(--text-muted); font-size: 14px; margin-bottom: 8px; }
+.modal-desc { color: var(--text); font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
+.modal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.modal-tag {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.rating-section { border-top: 1px solid var(--border); padding-top: 20px; }
+.rating-section h3 { font-size: 16px; margin-bottom: 14px; color: var(--text); }
+
+.star-input {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.rating-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.comment-area { resize: vertical; min-height: 80px; }
+
+.rating-actions { display: flex; gap: 8px; margin-top: 16px; }
+
+/* History page */
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--amber-light);
+  margin-bottom: 20px;
+}
+
+.history-list { display: flex; flex-direction: column; gap: 12px; }
+
+.history-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.history-card-body { flex: 1; }
+.history-beer-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.history-brewery { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.history-comment {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.history-card-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.history-date { font-size: 11px; color: var(--text-muted); }
+
+/* Submit page */
+.submit-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 560px;
+}
+
+.submit-card h2 { font-size: 20px; font-weight: 700; color: var(--amber-light); margin-bottom: 6px; }
+.submit-card > p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Empty / loading states */
+.loading { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 15px; }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+.error-msg {
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #fca5a5;
+  margin-bottom: 16px;
+}
+
+.success-msg {
+  background: rgba(22, 163, 74, 0.1);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #86efac;
+  margin-bottom: 16px;
+}
+
+/* User chip */
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px 4px 4px;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--amber-dark);
+  color: var(--amber-light);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-email { font-size: 12px; color: var(--text-muted); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 600px) {
+  .header { padding: 0 16px; }
+  .main { padding: 16px; }
+  .beer-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .header-logo span { display: none; }
+  .user-email { display: none; }
+}
