@@ -19,9 +19,14 @@ export default function Auth() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setError(error.message)
     } else {
-      const { error } = await supabase.auth.signUp({ email, password })
-      if (error) setError(error.message)
-      else setSuccess('Account created! Check your email to confirm, or sign in if confirmation is disabled.')
+      const { data, error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        setError(error.message)
+      } else if (data.session) {
+        // Email confirmation disabled — session returned immediately, app auto-logs in
+      } else {
+        setSuccess('Check your email for a confirmation link.')
+      }
     }
     setLoading(false)
   }
@@ -29,28 +34,28 @@ export default function Auth() {
   return (
     <div className="auth-wrap">
       <div className="auth-card">
-        <h2>🍺 HMB</h2>
-        <p>Rate beers, track your history, discover new favourites.</p>
+        <div className="auth-logo">🍺 HMB</div>
+        <p className="auth-sub">Rate beers, track your history, discover new favourites.</p>
 
         <div className="auth-tabs">
           <button className={`auth-tab ${tab === 'login' ? 'active' : ''}`} onClick={() => setTab('login')}>Sign In</button>
           <button className={`auth-tab ${tab === 'signup' ? 'active' : ''}`} onClick={() => setTab('signup')}>Sign Up</button>
         </div>
 
-        {error && <div className="error-msg">{error}</div>}
-        {success && <div className="success-msg">{success}</div>}
+        {error && <div className="alert alert-error">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label">Email</label>
-            <input type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
+            <input className="form-input" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
           </div>
           <div className="form-group">
             <label className="form-label">Password</label>
-            <input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
+            <input className="form-input" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
           </div>
-          <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-            {loading ? 'Please wait...' : tab === 'login' ? 'Sign In' : 'Create Account'}
+          <button type="submit" className="btn-auth" disabled={loading}>
+            {loading ? 'Please wait…' : tab === 'login' ? 'Sign In' : 'Create Account'}
           </button>
         </form>
       </div>

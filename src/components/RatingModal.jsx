@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
-import Stars from './Stars'
 
-const LABELS = ['', 'Not for me', 'Meh', 'Decent', 'Really good', 'Outstanding!']
+const LABELS = ['', "Not for me", "It's alright", 'Pretty decent', 'Really good', 'Outstanding!']
 
 export default function RatingModal({ beer, session, onClose, onSaved }) {
   const [rating, setRating] = useState(0)
@@ -31,13 +30,12 @@ export default function RatingModal({ beer, session, onClose, onSaved }) {
   }, [beer.id, session.user.id])
 
   async function handleSave() {
-    if (!rating) { setError('Please select a star rating.'); return }
+    if (!rating) { setError('Select a star rating first.'); return }
     setLoading(true)
     setError('')
-    const payload = { beer_id: beer.id, user_id: session.user.id, rating, comment }
     const { error } = existing
       ? await supabase.from('ratings').update({ rating, comment, updated_at: new Date().toISOString() }).eq('id', existing.id)
-      : await supabase.from('ratings').insert(payload)
+      : await supabase.from('ratings').insert({ beer_id: beer.id, user_id: session.user.id, rating, comment })
     setLoading(false)
     if (error) { setError(error.message); return }
     onSaved()
@@ -58,66 +56,66 @@ export default function RatingModal({ beer, session, onClose, onSaved }) {
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal">
-        <div className="modal-header">
-          <div className="modal-title">{beer.name}</div>
+        <div className="modal-handle" />
+
+        <div className="modal-top">
+          <div>
+            <div className="modal-name">{beer.name}</div>
+            <div className="modal-brewery">{beer.brewery}</div>
+          </div>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
 
-        <div className="modal-beer-info">
-          <div className="modal-brewery">{beer.brewery}</div>
-          {beer.description && <p className="modal-desc">{beer.description}</p>}
-          <div className="modal-tags">
-            <span className="modal-tag">🍺 {beer.style}</span>
-            {beer.abv && <span className="modal-tag">💧 {beer.abv}% ABV</span>}
-            {beer.country && <span className="modal-tag">🌍 {beer.country}</span>}
-          </div>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-            Community rating: <strong style={{ color: 'var(--gold)' }}>{Number(beer.avg_rating || 0).toFixed(1)} ★</strong> ({beer.rating_count || 0} ratings)
-          </div>
+        <div className="modal-tags">
+          <span className="modal-tag">🍺 {beer.style}</span>
+          {beer.abv && <span className="modal-tag">💧 {beer.abv}%</span>}
+          {beer.country && <span className="modal-tag">🌍 {beer.country}</span>}
         </div>
 
-        <div className="rating-section">
-          <h3>{existing ? 'Update your rating' : 'Rate this beer'}</h3>
-          {error && <div className="error-msg">{error}</div>}
+        {beer.description && <p className="modal-desc">{beer.description}</p>}
 
-          <div className="rating-label">
-            {display ? `${display}/5 — ${LABELS[display]}` : 'Select a rating'}
-          </div>
+        <div className="modal-community">
+          Community: <strong>{Number(beer.avg_rating || 0).toFixed(1)} ★</strong> from {beer.rating_count || 0} rating{beer.rating_count !== 1 ? 's' : ''}
+        </div>
 
-          <div className="star-input">
-            {[1,2,3,4,5].map(n => (
-              <span
-                key={n}
-                className={`star interactive lg ${n <= display ? 'filled' : ''}`}
-                onMouseEnter={() => setHover(n)}
-                onMouseLeave={() => setHover(0)}
-                onClick={() => setRating(n)}
-              >★</span>
-            ))}
-          </div>
+        <div className="rate-heading">{existing ? 'Your rating' : 'Rate this beer'}</div>
 
-          <div className="form-group">
-            <label className="form-label">Comment (optional)</label>
-            <textarea
-              className="comment-area"
-              placeholder="What did you think? Tasting notes, when you drank it, who with..."
-              value={comment}
-              onChange={e => setComment(e.target.value)}
-              maxLength={500}
-            />
-          </div>
+        {error && <div className="alert alert-error">{error}</div>}
 
-          <div className="rating-actions">
-            <button className="btn btn-primary" onClick={handleSave} disabled={loading}>
-              {loading ? 'Saving...' : existing ? 'Update Rating' : 'Save Rating'}
+        <div className="stars-row">
+          {[1,2,3,4,5].map(n => (
+            <button
+              key={n}
+              className={`star-btn ${n <= display ? 'on' : ''}`}
+              onMouseEnter={() => setHover(n)}
+              onMouseLeave={() => setHover(0)}
+              onClick={() => setRating(n)}
+            >★</button>
+          ))}
+        </div>
+
+        <div className="star-label-text">
+          {display ? <><strong>{display}/5</strong> — {LABELS[display]}</> : 'Tap a star'}
+        </div>
+
+        <textarea
+          className="modal-textarea"
+          placeholder="Tasting notes, where you had it, who with… (optional)"
+          value={comment}
+          onChange={e => setComment(e.target.value)}
+          maxLength={500}
+        />
+
+        <div className="modal-actions">
+          <button className="btn btn-primary" onClick={handleSave} disabled={loading}>
+            {loading ? 'Saving…' : existing ? 'Update' : 'Save Rating'}
+          </button>
+          {existing && (
+            <button className="btn btn-danger" onClick={handleDelete} disabled={deleting}>
+              {deleting ? '…' : 'Remove'}
             </button>
-            {existing && (
-              <button className="btn btn-danger btn-sm" onClick={handleDelete} disabled={deleting}>
-                {deleting ? '...' : 'Remove'}
-              </button>
-            )}
-            <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-          </div>
+          )}
+          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
         </div>
       </div>
     </div>

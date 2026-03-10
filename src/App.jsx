@@ -26,20 +26,21 @@ export default function App() {
   return (
     <div className="app">
       <header className="header">
-        <div className="header-logo">
-          🍺 HMB <span>Rate My Beer</span>
+        <div className="logo">
+          🍺 HMB <span className="logo-sub">Rate My Beer</span>
         </div>
         {session && (
-          <nav className="header-nav">
-            <button className={`nav-btn ${page === 'browse' ? 'active' : ''}`} onClick={() => setPage('browse')}>Browse</button>
-            <button className={`nav-btn ${page === 'history' ? 'active' : ''}`} onClick={() => setPage('history')}>My Ratings</button>
-            <button className={`nav-btn ${page === 'submit' ? 'active' : ''}`} onClick={() => setPage('submit')}>Submit Beer</button>
-            <div className="user-chip">
-              <div className="user-avatar">{session.user.email[0].toUpperCase()}</div>
-              <span className="user-email">{session.user.email}</span>
+          <div className="header-right">
+            <nav className="desktop-nav">
+              <button className={`nav-link ${page === 'browse' ? 'active' : ''}`} onClick={() => setPage('browse')}>Browse</button>
+              <button className={`nav-link ${page === 'ratings' ? 'active' : ''}`} onClick={() => setPage('ratings')}>My Ratings</button>
+              <button className={`nav-link ${page === 'submit' ? 'active' : ''}`} onClick={() => setPage('submit')}>Submit</button>
+            </nav>
+            <div className="user-avatar" title={session.user.email}>
+              {session.user.email[0].toUpperCase()}
             </div>
-            <button className="nav-btn" onClick={() => supabase.auth.signOut()}>Sign out</button>
-          </nav>
+            <button className="sign-out-btn" onClick={() => supabase.auth.signOut()}>Sign out</button>
+          </div>
         )}
       </header>
 
@@ -48,12 +49,29 @@ export default function App() {
           <Auth />
         ) : page === 'browse' ? (
           <BeerBrowser session={session} />
-        ) : page === 'history' ? (
+        ) : page === 'ratings' ? (
           <MyRatings session={session} />
         ) : (
           <SubmitBeer session={session} onSubmitted={() => setPage('browse')} />
         )}
       </main>
+
+      {session && (
+        <nav className="bottom-nav">
+          <button className={`bottom-nav-btn ${page === 'browse' ? 'active' : ''}`} onClick={() => setPage('browse')}>
+            <span className="nav-icon">🍺</span>
+            Browse
+          </button>
+          <button className={`bottom-nav-btn ${page === 'ratings' ? 'active' : ''}`} onClick={() => setPage('ratings')}>
+            <span className="nav-icon">⭐</span>
+            My Ratings
+          </button>
+          <button className={`bottom-nav-btn ${page === 'submit' ? 'active' : ''}`} onClick={() => setPage('submit')}>
+            <span className="nav-icon">➕</span>
+            Submit
+          </button>
+        </nav>
+      )}
     </div>
   )
 }
