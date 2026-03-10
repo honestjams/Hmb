@@ -19,9 +19,15 @@ export default function Auth() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setError(error.message)
     } else {
-      const { error } = await supabase.auth.signUp({ email, password })
-      if (error) setError(error.message)
-      else setSuccess('Account created! Check your email to confirm, or sign in if confirmation is disabled.')
+      const { data, error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        setError(error.message)
+      } else if (data.session) {
+        // Email confirmation is disabled — session returned immediately, app will auto-login
+      } else {
+        // Email confirmation is still enabled in Supabase dashboard
+        setSuccess('Check your email for a confirmation link.')
+      }
     }
     setLoading(false)
   }
